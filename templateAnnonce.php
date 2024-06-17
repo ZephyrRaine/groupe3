@@ -7,16 +7,15 @@
     <meta name="keywords" content="mots-clés, séparés, par, des, virgules">
     <meta name="author" content="Votre Nom">
     <link rel="stylesheet" href="templateAnnonce.css">
-    <title>Template d'une Annonce</title>
+    <title>Nom de l'annonce</title>
     </head>
 <body>
     <header>
-        <h1>Annonce</h1>
+    <link rel="stylesheet" href="templateAnnonce.css">
     </header>
     <main>
         <?php
-            // Votre code PHP ici
-            echo "Bonjour, aujourd'hui nous sommes le " . date("d/m/Y") . ".";
+
         ?>
     </main>
 </body>
