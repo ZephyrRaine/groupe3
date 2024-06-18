@@ -1,8 +1,3 @@
-<?php
-session_start();
-require_once(__DIR__ . '/variables.php');
-require_once(__DIR__ . '/functions.php');
-?>
 
 <!DOCTYPE html>
 <html>
@@ -19,11 +14,14 @@ require_once(__DIR__ . '/functions.php');
         <h1></h1>
    <!-- Le corps -->
     </div>
-
     <div id="corps">
        
-    </div>
 
+
+
+
+    
+    </div>
     <!--pied de page -->
     <?php require_once(__DIR__ . '/footer.php'); ?>
 </body>
