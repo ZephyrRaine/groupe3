@@ -22,7 +22,7 @@
 <body>
 
 <div class="container">
-    <h1 class="mt-4">Page d'accueil des petites annonces</h1>
+    <h1 class="mt-4">Lemauvaiscoin</h1>
     
     <!-- Barre de recherche -->
     <form method="GET" action="search.php" class="form-inline my-4">
