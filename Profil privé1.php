@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 
         $_SESSION['user_id'] = $user['id'];
 
-        header("Location: index.php");
+        redirectToUrl("accueil.php");
 
     } else {
 
@@ -123,7 +123,7 @@ if (isset($_SESSION['user_id'])) {
 
     <h1>Login</h1>
 
-    <form method="post" action="index.php">
+    <form method="post" action="accueil.php">
 
         <label for="email">Email:</label>
 
