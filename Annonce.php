@@ -3,7 +3,7 @@
 session_start();
 
 // Inclure les fichiers nécessaires
-require_once(__DIR__ . '/BDD.php'); // Assurez-vous que ce fichier contient la connexion à la base de données
+require_once(__DIR__ . '/BDD.php');
 require_once(__DIR__ . '/header.php');
 ?>
 
@@ -20,38 +20,39 @@ require_once(__DIR__ . '/header.php');
 <body>
     <main>
         <?php
-        // Utiliser la connexion globale à la base de données
         global $dbh;
 
-        // Vérification de la connexion
         if (!$dbh) {
             die("Connexion échouée");
         }
 
-        // Requête SQL pour récupérer toutes les annonces
+        // Récupération de l'ID de l'annonce à partir de l'URL
+        $id_annonce = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+        // Requête SQL pour récupérer les détails de l'annonce
         $sql = "SELECT annonces.titre, annonces.description, annonces.prix, annonces.date_publication, utilisateurs.nom AS nom_utilisateur, utilisateurs.prenom AS prenom_utilisateur, categories.nom AS nom_categorie
                 FROM annonces
                 JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id
-                JOIN categories ON annonces.id_categorie = categories.id";
+                JOIN categories ON annonces.id_categorie = categories.id
+                WHERE annonces.id = :id_annonce";
         
         $stmt = $dbh->prepare($sql);
         if ($stmt === false) {
             die("Erreur de préparation de la requête: " . $dbh->errorInfo()[2]);
         }
         
+        $stmt->bindParam(':id_annonce', $id_annonce, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $annonce = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (count($result) > 0) {
+        if ($annonce) {
             // Affichage des détails de l'annonce
-            foreach ($result as $row) {
-                echo "<h1>" . htmlspecialchars($row['titre']) . "</h1>";
-                echo "<p>Description: " . nl2br(htmlspecialchars($row['description'])) . "</p>";
-                echo "<p>Prix: " . htmlspecialchars($row['prix']) . " €</p>";
-                echo "<p>Date de publication: " . htmlspecialchars($row['date_publication']) . "</p>";
-                echo "<p>Catégorie: " . htmlspecialchars($row['nom_categorie']) . "</p>";
-                echo "<p>Publié par: " . htmlspecialchars($row['prenom_utilisateur']) . " " . htmlspecialchars($row['nom_utilisateur']) . "</p>";
-            }
+            echo "<h1>" . htmlspecialchars($annonce['titre']) . "</h1>";
+            echo "<p>Description: " . nl2br(htmlspecialchars($annonce['description'])) . "</p>";
+            echo "<p>Prix: " . htmlspecialchars($annonce['prix']) . " €</p>";
+            echo "<p>Date de publication: " . htmlspecialchars($annonce['date_publication']) . "</p>";
+            echo "<p>Catégorie: " . htmlspecialchars($annonce['nom_categorie']) . "</p>";
+            echo "<p>Publié par: " . htmlspecialchars($annonce['prenom_utilisateur']) . " " . htmlspecialchars($annonce['nom_utilisateur']) . "</p>";
         } else {
             echo "<p>Aucune annonce trouvée.</p>";
         }
