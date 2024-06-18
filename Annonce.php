@@ -6,17 +6,25 @@
     <meta name="description" content="Description de votre site ou page">
     <meta name="keywords" content="mots-clés, séparés, par, des, virgules">
     <meta name="author" content="Votre Nom">
-    <link rel="stylesheet" href="templateAnnonce.css">
     <title>Nom de l'annonce</title>
-    </head>
+</head>
 <body>
-    <header>
-    <link rel="stylesheet" href="templateAnnonce.css">
-    </header>
-    <main>
+    
+    <header> 
         <?php
+        require_once(__DIR__ . '/header.php');
+        ?>
+    </header>
 
+    <main>
+        
         ?>
     </main>
+
+    <footer>
+        <?php
+        require_once(__DIR__ . '/footer.php');
+        ?>
+    </footer>
 </body>
 </html>
