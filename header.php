@@ -17,6 +17,9 @@
                     <a class="nav-link active" aria-current="page" href="accueil.php">accueil</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="annonce.php">annonce</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="profile.php">profile</a>
                 </li>
             </ul>
