@@ -1,7 +1,6 @@
 
 <?php
 // Démarrer la session au début du fichier
-session_start();
 
 // Inclure les fichiers nécessaires
 require_once(__DIR__ . '/BDD.php');
