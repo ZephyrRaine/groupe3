@@ -20,8 +20,6 @@ require_once(__DIR__ . '/header.php');
 <body>
     <main>
         <?php
-        global $dbh;
-
         if (!$dbh) {
             die("Connexion échouée");
         }
