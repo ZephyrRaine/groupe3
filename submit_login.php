@@ -11,30 +11,27 @@ require_once(__DIR__ . '/BDD.php');
 $postData = $_POST;
 
 
-$results = $dbh->prepare("SELECT email, mot_de_passe FROM utilisateurs");
+$results = $dbh->prepare("SELECT id, email, mot_de_passe FROM utilisateurs");
 $results->execute();
 $users = $results->fetchAll(PDO::FETCH_ASSOC);
 
 // Validation du formulaire
 if (isset($postData['email']) &&  isset($postData['password'])) {
     if (!filter_var($postData['email'], FILTER_VALIDATE_EMAIL)) {
-        $_SESSION['LOGIN_ERROR_MESSAGE'] = 'Il faut un email valide pour soumettre le formulaire.';
+        $_SESSION['LOGIN_ERROR_MESSAGE'] = 'Il faut un email valide pour soumettre le formulaire. ' . $postData['email'] . '<=';
     } else {
         foreach ($users as $user) {
             if (
                 $user['email'] === $postData['email'] &&
-                $user['password'] === $postData['password']
+                $user['mot_de_passe'] === $postData['password']
             ) {
-                $_SESSION['LOGGED_USER'] = [
-                    'email' => $user['email'],
-                    'user_id' => $user['user_id'],
-                ];
+                $_SESSION['user_id'] = $user['id'];
             }
         }
 
-        if (!isset($_SESSION['LOGGED_USER'])) {
-            $_SESSION['LOGIN_ERROR_MESSAGE'] = sprintf(
-                'Les informations envoyées ne permettent pas de vous identifier : (%s/%s)',
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['OGIN_ERROR_MESSAGE'] = sprintf(
+                'Les iLnformations envoyées ne permettent pas de vous identifier : (%s/%s)',
                 $postData['email'],
                 strip_tags($postData['password'])
             );
