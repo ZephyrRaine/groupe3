@@ -59,7 +59,7 @@ require_once(__DIR__ . '/header.php');
         $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
 
-        <form method="POST" action="page_liste_annonce.php">
+        <form method="POST" action="accueil.php">
             <label for="category">Catégorie :</label>
             <select name="category" id="category">
                 <option value="0">Toutes</option>

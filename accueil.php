@@ -18,9 +18,9 @@ require_once(__DIR__ . '/header.php');
     <title>Accueil</title>
 
     <!-- Inclusion de Bootstrap pour le style -->
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Inclusion de jQuery -->
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Inclusion de Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
@@ -33,10 +33,10 @@ require_once(__DIR__ . '/header.php');
 
 <div>
     <?php 
-    require_once(__DIR__ . 'page_liste_annonce.php')
+    require_once(__DIR__ . '\page_liste_annonce.php')
+    
     ?>
 </div>
 
 </body>
 </html>
-
