@@ -1,8 +1,7 @@
-
 <?php
-// Démarrer la session au début du fichier
 
-// Inclure les fichiers nécessaires
+
+// Inclure les fichiers nécessaires pour la base de données et le header
 require_once(__DIR__ . '/BDD.php');
 require_once(__DIR__ . '/header.php');
 ?>
@@ -15,7 +14,14 @@ require_once(__DIR__ . '/header.php');
     <meta name="description" content="Description de votre site ou page">
     <meta name="keywords" content="mots-clés, séparés, par, des, virgules">
     <meta name="author" content="Votre Nom">
-    <title>Liste des Annonces</title>
+    <title>Liste des annonces</title>
+
+    <!-- Inclusion de Bootstrap pour le style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Inclusion de jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Inclusion de Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
     <main>

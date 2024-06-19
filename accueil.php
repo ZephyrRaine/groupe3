@@ -27,7 +27,7 @@ require_once(__DIR__ . '/header.php');
 <body>
 
 <div class="container">
-    <h1 class="mt-4">Lemauvaiscoin</h1>
+    <h1 class="mt-4">Le Mauvais Coin</h1>
     
 </div>
 
