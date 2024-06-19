@@ -17,6 +17,7 @@ $users = $results->fetchAll(PDO::FETCH_ASSOC);
 
 // Validation du formulaire
 if (isset($postData['email']) &&  isset($postData['password'])) {
+    $_SESSION['user_id'] = null;
     if (!filter_var($postData['email'], FILTER_VALIDATE_EMAIL)) {
         $_SESSION['LOGIN_ERROR_MESSAGE'] = 'Il faut un email valide pour soumettre le formulaire. ' . $postData['email'] . '<=';
     } else {
@@ -29,15 +30,19 @@ if (isset($postData['email']) &&  isset($postData['password'])) {
             }
         }
 
-        if (!isset($_SESSION['user_id'])) {
-            $_SESSION['OGIN_ERROR_MESSAGE'] = sprintf(
-                'Les iLnformations envoyées ne permettent pas de vous identifier : (%s/%s)',
-                $postData['email'],
-                strip_tags($postData['password'])
-            );
-        }
+       
     }
-
-    header("Location: accueil.php");
-    exit();
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION['LOGIN_ERROR_MESSAGE'] = sprintf(
+            'Les iLnformations envoyées ne permettent pas de vous identifier : (%s/%s)',
+            $postData['email'],
+            strip_tags($postData['password']));
+            header("Location: login.php");
+            exit();
+    }
+    else
+    {
+        header("Location: accueil.php");
+        exit();
+    }
 }
