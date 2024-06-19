@@ -1,3 +1,4 @@
+
 <?php
 // Démarrer la session au début du fichier
 session_start();
