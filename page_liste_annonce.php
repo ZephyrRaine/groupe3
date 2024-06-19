@@ -1,46 +1,38 @@
-    <!-- Barre de recherche -->
-    <form method="GET" action="index.php" class="form-inline my-4">
-        <input type="text" name="query" class="form-control mr-2" placeholder="Rechercher des annonces">
-        <button type="submit" class="btn btn-primary">Rechercher</button>
-    </form>
-    
-    <!-- Options de filtrage -->
-    <div class="mb-4">
-        <form method="GET" action="index.php" class="form-row">
-            <div class="form-group col-md-3">
-                <label for="categorie">Catégorie</label>
-                <select id="categorie" name="categorie" class="form-control">
-                    <option value="">Toutes les catégories</option>
-                    <?php
-                    $categories_stmt = $dbh->prepare("SELECT id, nom FROM categories");
-                    $categories_stmt->execute();
-                    $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($categories as $categorie) {
-                        echo '<option value="' . htmlspecialchars($categorie['id']) . '">' . htmlspecialchars($categorie['nom']) . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="form-group col-md-3">
-                <label for="prix">Prix</label>
-                <input type="number" id="prix" name="prix" class="form-control" placeholder="Prix max">
-            </div>
-            <div class="form-group col-md-3 align-self-end">
-                <button type="submit" class="btn btn-secondary">Filtrer</button>
-            </div>
-        </form>
-    </div>
-    
-    <!-- Affichage des annonces -->
-    <div class="row">
+
+<?php
+// Démarrer la session au début du fichier
+session_start();
+
+// Inclure les fichiers nécessaires
+require_once(__DIR__ . '/BDD.php');
+require_once(__DIR__ . '/header.php');
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Description de votre site ou page">
+    <meta name="keywords" content="mots-clés, séparés, par, des, virgules">
+    <meta name="author" content="Votre Nom">
+    <title>Liste des Annonces</title>
+</head>
+<body>
+    <main>
         <?php
+        global $dbh;
+
         if (!$dbh) {
             die("Connexion échouée");
         }
 
-        $selected_category = isset($_GET['categorie']) ? intval($_GET['categorie']) : 0;
-        $search_term = isset($_GET['query']) ? trim($_GET['query']) : '';
-        $max_price = isset($_GET['prix']) ? floatval($_GET['prix']) : 0;
+        $categories_stmt = $dbh->prepare("SELECT id, nom FROM categories");
+        $categories_stmt->execute();
+        $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $selected_category = isset($_POST['category']) ? intval($_POST['category']) : 0;
+        $search_term = isset($_POST['search']) ? trim($_POST['search']) : '';
 
         $sql = "SELECT annonces.id, annonces.titre, annonces.prix, categories.nom AS nom_categorie
                 FROM annonces
@@ -55,10 +47,6 @@
             $sql .= " AND annonces.titre LIKE :search";
         }
 
-        if ($max_price > 0) {
-            $sql .= " AND annonces.prix <= :max_price";
-        }
-
         $stmt = $dbh->prepare($sql);
         if ($selected_category > 0) {
             $stmt->bindParam(':category', $selected_category, PDO::PARAM_INT);
@@ -67,29 +55,47 @@
             $search_term_with_wildcards = '%' . $search_term . '%';
             $stmt->bindParam(':search', $search_term_with_wildcards, PDO::PARAM_STR);
         }
-        if ($max_price > 0) {
-            $stmt->bindParam(':max_price', $max_price, PDO::PARAM_STR);
-        }
 
         $stmt->execute();
         $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($annonces as $annonce) {
-            echo "<div class='col-md-4 mb-4'>";
-            echo "<div class='card'>";
-            echo "<div class='card-body'>";
-            echo "<h5 class='card-title'>" . htmlspecialchars($annonce['titre']) . "</h5>";
-            echo "<p class='card-text'>Prix: " . htmlspecialchars($annonce['prix']) . " €</p>";
-            echo "<p class='card-text'>Catégorie: " . htmlspecialchars($annonce['nom_categorie']) . "</p>";
-            echo "<a href='annonce.php?id=" . htmlspecialchars($annonce['id']) . "' class='btn btn-primary'>Voir l'annonce</a>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-        }
         ?>
-    </div>
 
-    <!-- Bouton pour publier une annonce -->
-    <div class="mt-4">
-        <a href="publish.php" class="btn btn-success">Publier une annonce</a>
-    </div>
+        <form method="POST" action="page_liste_annonce.php">
+            <label for="category">Catégorie :</label>
+            <select name="category" id="category">
+                <option value="0">Toutes</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?php echo $category['id']; ?>" <?php if ($category['id'] == $selected_category) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($category['nom']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            
+            <label for="search">Recherche :</label>
+            <input type="text" name="search" id="search" value="<?php echo htmlspecialchars($search_term); ?>">
+            
+            <button type="submit">Filtrer</button>
+        </form>
+
+        <?php if (count($annonces) > 0): ?>
+            <ul>
+                <?php foreach ($annonces as $annonce): ?>
+                    <li>
+                        <a href="annonce.php?id=<?php echo $annonce['id']; ?>"><strong><?php echo htmlspecialchars($annonce['titre']); ?></strong></a><br>
+                        Prix: <?php echo htmlspecialchars($annonce['prix']); ?> €<br>
+                        Catégorie: <?php echo htmlspecialchars($annonce['nom_categorie']); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Aucune annonce trouvée.</p>
+        <?php endif; ?>
+    </main>
+
+    <footer>
+        <?php
+        require_once(__DIR__ . '/footer.php');
+        ?>
+    </footer>
+</body>
+</html>
