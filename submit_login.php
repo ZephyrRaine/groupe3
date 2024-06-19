@@ -11,7 +11,7 @@ require_once(__DIR__ . '/BDD.php');
 $postData = $_POST;
 
 
-$results = $dbh->prepare("SELECT id, nom FROM utilisateurs");
+$results = $dbh->prepare("SELECT email, mot_de_passe FROM utilisateurs");
 $results->execute();
 $users = $results->fetchAll(PDO::FETCH_ASSOC);
 
@@ -41,5 +41,6 @@ if (isset($postData['email']) &&  isset($postData['password'])) {
         }
     }
 
-    redirectToUrl('accueil.php');
+    header("Location: accueil.php");
+    exit();
 }
