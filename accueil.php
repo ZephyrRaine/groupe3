@@ -33,7 +33,8 @@ require_once(__DIR__ . '/header.php');
 
 <div>
     <?php 
-    require_once(__DIR__ . 'page_liste_annonce.php')
+    require_once(__DIR__ . '\page_liste_annonce.php')
+    
     ?>
 </div>
 
