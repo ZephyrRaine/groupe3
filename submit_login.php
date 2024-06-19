@@ -1,5 +1,3 @@
-
-
 <?php
 
 session_start();
@@ -15,7 +13,7 @@ $postData = $_POST;
 
 $results = $dbh->prepare("SELECT id, nom FROM utilisateurs");
 $results->execute();
-$results = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
+$users = $results->fetchAll(PDO::FETCH_ASSOC);
 
 // Validation du formulaire
 if (isset($postData['email']) &&  isset($postData['password'])) {
