@@ -3,10 +3,11 @@
 session_start();
 
 // Inclure le fichier de connexion à la base de données
-require_once('BDD.php');
+require_once(__DIR__ . '/BDD.php');
+require_once(__DIR__ . '/header.php');
 
 // Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['LOGGED_USER'])) {
+if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
@@ -19,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prix = $_POST['prix'];
     $categorie = $_POST['categorie'];
     $date_publication = date('Y-m-d');
-    $id_utilisateur = $_SESSION['LOGGED_USER']['id'];
+    $id_utilisateur = $_SESSION['user_id'];
 
     // Préparer et exécuter la requête SQL pour insérer l'annonce
     $sql = "INSERT INTO annonces (titre, description, prix, date_publication, id_utilisateur, id_categorie) VALUES (?, ?, ?, ?, ?, ?)";
