@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Préparer et exécuter la requête SQL pour insérer l'annonce
     $sql = "INSERT INTO annonces (titre, description, prix, date_publication, id_utilisateur, id_categorie) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $dbh->prepare($sql);
     $stmt->execute([$titre, $description, $prix, $date_publication, $id_utilisateur, $categorie]);
 
     // Rediriger vers la page de liste des annonces après l'insertion
@@ -59,14 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php
         // Récupérer les catégories de la base de données
         $sql = "SELECT id, nom FROM categories";
-        $stmt = $pdo->query($sql);
+        $stmt = $dbh->query($sql);
         while ($row = $stmt->fetch()) {
             echo '<option value="' . $row['id'] . '">' . $row['nom'] . '</option>';
         }
         ?>
     </select>
     <br>
-    <button type="submit">Ajouter l'annonce</button>
+    <button type="submit" class="btn btn-primary">Ajouter l'annonce</button>
 </form>
 
 </body>
