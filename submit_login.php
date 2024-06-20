@@ -42,7 +42,7 @@ if (isset($postData['email']) &&  isset($postData['password'])) {
     }
     else
     {
-        header("Location: accueil.php");
+        header("Location: profile.php");
         exit();
     }
 }
