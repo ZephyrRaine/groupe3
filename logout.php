@@ -7,5 +7,5 @@ session_unset();
 session_destroy();
 
 // Rediriger l'utilisateur vers la page d'accueil
-header('Location: accueil.php');
+header('Location: profile.php');
 exit();

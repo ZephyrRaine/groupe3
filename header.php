@@ -27,9 +27,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="profile.php">profile</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.php">connection</a>
-                </li>
+               
                 
             </ul>
        
