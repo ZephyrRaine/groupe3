@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+// Vérifiez si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
+
 // Connexion à la base de données
 $servername = '10.96.16.90';
 $username = 'groupe3';
@@ -11,10 +19,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ID de l'utilisateur à afficher (vous pouvez changer cet ID pour afficher un autre utilisateur)
-$user_id = 1;
-
-// Récupération des informations de l'utilisateur
+// Récupération des informations de l'utilisateur connecté
+$user_id = $_SESSION['user_id'];
 $sql_user = "SELECT * FROM utilisateurs WHERE id = ?";
 $stmt_user = $conn->prepare($sql_user);
 $stmt_user->bind_param("i", $user_id);
