@@ -25,7 +25,12 @@ require_once(__DIR__ . '/header.php');
 </head>
 <body>
     <main>
+        <!-- Bouton pour ajouter une nouvelle annonce -->
+<a href="post_annonce.php">
+    <button>Ajouter une nouvelle annonce</button>
+</a>
         <?php
+        
         global $dbh;
 
         if (!$dbh) {
