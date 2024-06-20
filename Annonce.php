@@ -63,6 +63,7 @@ require_once(__DIR__ . '/header.php');
         } else {
             echo "<p>Aucune annonce trouvée.</p>";
         }
+        echo($_SESSION['user_id'])
         ?>
     </main>
 
