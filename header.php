@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">Site de petites annonces</a>
+        <a class="navbar-brand" href="accueil.php">Site de petites annonces</a>
        <!-- Inclusion de Bootstrap pour le style -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Inclusion de jQuery -->
