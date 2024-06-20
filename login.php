@@ -54,8 +54,8 @@
                 Bonjour <?php echo $_SESSION['LOGGED_USER']['email']; ?> et bienvenue sur le site !
             </div>
         <?php endif; ?>
-        
-        
+
+
     
     </div>
     <!--pied de page -->
