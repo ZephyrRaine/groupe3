@@ -1,140 +1,90 @@
-<?php
-session_start();
-
-// Connexion à la base de données
-$servername = '10.96.16.90';
-$username = 'groupe3';
-$password = "groupe3";
-$dbname = 'groupe3';
-
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
- 
-
-if ($conn->connect_error) {
-
-    die("Connection failed: " . $conn->connect_error);
-
-}
-
- 
-
-// Gestion de la connexion utilisateur
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
-
-    $email = $_POST['email'];
-
-    $password = $_POST['password'];
-
- 
-
-    $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-
-    $result = $conn->query($sql);
-
- 
-
-    if ($result->num_rows > 0) {
-
-        $user = $result->fetch_assoc();
-
-        $_SESSION['user_id'] = $user['id'];
-
-        header("Location: index.php");
-
-    } else {
-
-        echo "Invalid credentials";
-
-    }
-
-}
-
- 
-
-// Affichage du profil privé
-
-if (isset($_SESSION['user_id'])) {
-
-    $user_id = $_SESSION['user_id'];
-
-    $sql = "SELECT * FROM users WHERE id = '$user_id'";
-
-    $user_result = $conn->query($sql);
-
-    $user = $user_result->fetch_assoc();
-
- 
-
-    $post_sql = "SELECT * FROM posts WHERE user_id = '$user_id'";
-
-    $post_result = $conn->query($post_sql);
-
- 
-
-    $comment_sql = "SELECT * FROM comments WHERE user_id = '$user_id'";
-
-    $comment_result = $conn->query($comment_sql);
-
-}
-
- 
-
-// Affichage du profil public
-
-if (isset($_GET['user_id'])) {
-
-    $public_user_id = $_GET['user_id'];
-
-    $sql = "SELECT * FROM users WHERE id = '$public_user_id'";
-
-    $public_user_result = $conn->query($sql);
-
-    $public_user = $public_user_result->fetch_assoc();
-
- 
-
-    $public_post_sql = "SELECT * FROM posts WHERE user_id = '$public_user_id'";
-
-    $public_post_result = $conn->query($public_post_sql);
-
-}
-
-?>
-
- 
-
 <!DOCTYPE html>
 
 <html>
 
 <head>
 
-    <title>Profile Page</title>
+    <title>Page de profil</title>
 
 </head>
 
 <body>
 
+
+
+<?php
+session_start();
+require_once('BDD.php');
+
+$_SESSION['user_id'] = 1;
+
+
+// Affichage du profil privé
+if (isset($_SESSION['user_id'])) {
+   
+    $utilisateurs_id = $_SESSION['user_id'];
+    echo $utilisateurs_id;
+    $sql = "SELECT * FROM utilisateurs WHERE id = '$utilisateurs_id'";
+
+    $utilisateurs_result = $dbh->query($sql);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $utilisateurs = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    $annonces_sql = "SELECT * FROM annonces WHERE id_utilisateur = '$utilisateurs_id'";
+    $annonces_result = $dbh->prepare($annonces_sql);
+    $annonces_result->execute();
+    $annonces = $annonces_result->fetchAll(PDO::FETCH_ASSOC);
+
+    $commentaires_sql = "SELECT * FROM commentaires WHERE id_utilisateur = '$utilisateurs_id'";
+    $commentaires_result = $dbh->prepare($commentaires_sql);
+    $commentaires_result->execute();
+    $commentaires = $commentaires_result->fetchAll(PDO::FETCH_ASSOC);
+}
  
 
-<?php if (!isset($_SESSION['user_id'])): ?>
+// Affichage du profil public
+if (isset($_GET['user_id'])) {
+    
+    $public_utilisateur_id = $_GET['user_id'];
+    echo $utilisateurs_id;
 
-    <h1>Login</h1>
+    $sql = "SELECT * FROM utilisateurs WHERE utilisateurs.id = '$public_utilisateur_id'";
 
-    <form method="post" action="index.php">
+    $public_utilisateurs_result = $dbh->query($sql);
+
+    $public_utilisateurs = $public_utilisateurs_result->fetch(PDO::FETCH_ASSOC);
+    
+
+    $public_annonces_sql = "SELECT * FROM annonces WHERE id_utilisateur = '$public_utilisateur_id'";
+    $public_annonces_result = $dbh->prepare($public_annonces_sql);
+    $public_annonces_result->execute();
+    $public_annonces = $public_annonces_result->fetchAll(PDO::FETCH_ASSOC);
+}
+
+?>
+
+ 
+
+<?php 
+
+
+if (!isset($_SESSION['user_id'])): ?>
+
+    <h1>Inscription</h1>
+
+    <form method="annonces" action="Annonce.php">
 
         <label for="email">Email:</label>
 
-        <input type="email" id="email" name="email" required><br>
+        <input type="email" id="email" nom="email" required><br>
 
         <label for="password">Password:</label>
 
-        <input type="password" id="password" name="password" required><br>
+        <input type="password" id="password" nom="password" required><br>
 
-        <button type="submit" name="login">Login</button>
+        <button type="submit" nom="login">Login</button>
 
     </form>
 
@@ -142,46 +92,57 @@ if (isset($_GET['user_id'])) {
 
     <h1>Private Profile</h1>
 
-    <p>Name: <?= $user['first_name'] . " " . $user['last_name'] ?></p>
+    <p>Nom: <?php $utilisateurs['prenom'] ?? 'lol' . " " . $utilisateurs['nom']  ?? 'lol' ?></p>
 
-    <p>Email: <?= $user['email'] ?></p>
+    <p>Email: <?= $utilisateurs['email'] ?></p>
 
-    <p>Account created on: <?= $user['created_at'] ?></p>
-
- 
-
-    <h2>Your Posts</h2>
-
-    <?php while($post = $post_result->fetch_assoc()): ?>
-
-        <div>
-
-            <h3><?= $post['title'] ?></h3>
-
-            <p><?= $post['content'] ?></p>
-
-            <p>Posted on: <?= $post['created_at'] ?></p>
-
-        </div>
-
-    <?php endwhile; ?>
+    <p>Account created on: <?=$utilisateurs['date_inscription']?></p>
 
  
 
-    <h2>Your Comments</h2>
+    <h2>Vos annonces</h2>
 
-    <?php while($comment = $comment_result->fetch_assoc()): ?>
+    
 
+    <?php 
+    
+    
+    
+    foreach($annonces as $annonce)
+    { ?>
         <div>
 
-            <p><?= $comment['content'] ?></p>
+            <h3><?= $annonce['titre'] ?></h3>
 
-            <p>Commented on: <?= $comment['created_at'] ?></p>
+            <p><?= $annonce['description'] ?></p>
+
+            <p>Posted on: <?= $annonce['date_publication'] ?></p>
+
+            
+        </div>
+
+    <?php }; ?>
+
+ 
+
+    <h2>Vos commentaires</h2>
+
+    <?php
+    foreach($commentaires as $commentaire)
+    { ?>
+        <div>
+
+            <h3><?= $commentaire['id_annonce'] ?></h3>
+
+            <p><?= $commentaire['contenu'] ?></p>
+
+            <p>Posted on: <?= $commentaire['date_commentaire'] ?></p>
 
         </div>
 
-    <?php endwhile; ?>
+    <?php }; ?>
 
+    
  
 
     <a href="logout.php">Logout</a>
@@ -190,31 +151,32 @@ if (isset($_GET['user_id'])) {
 
  
 
-<?php if (isset($public_user)): ?>
+<?php if (isset($public_utilisateur_id)): ?>
 
-    <h1>Public Profile</h1>
+    <h1>Profil publique</h1>
 
-    <p>Name: <?= $public_user['first_name'] . " " . $public_user['last_name'] ?></p>
+    <p>Name: <?= $public_utilisateurs['prenom'] . " " . $public_utilisateurs['nom'] ?></p>
 
-    <p>Account created on: <?= $public_user['created_at'] ?></p>
+    <p>Account created on: <?= $public_utilisateurs['date_inscription'] ?></p>
 
  
 
     <h2>Posts</h2>
 
-    <?php while($post = $public_post_result->fetch_assoc()): ?>
+    <?php 
+    foreach($public_annonces as $public_annonce) 
+    { ?>
 
         <div>
+            <h3><?= $public_annonce['titre'] ?></h3>
 
-            <h3><?= $post['title'] ?></h3>
+            <p><?= $public_annonce['description'] ?></p>
 
-            <p><?= $post['content'] ?></p>
-
-            <p>Posted on: <?= $post['created_at'] ?></p>
+            <p>Posted on: <?= $public_annonce['date_publication'] ?></p>
 
         </div>
 
-    <?php endwhile; ?>
+    <?php } ?>
 
 <?php endif; ?>
 
