@@ -1,30 +1,34 @@
 <?php
-session_start();
+// Connexion à la base de données
+$servername = '10.96.16.90';
+$username = 'groupe3';
+$password = 'groupe3';
+$dbname = 'groupe3';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit();
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-require 'header.php';
-$_SESSION['user']['id'] = 0;
-// Connexion à la base de données (ajustez les paramètres de connexion selon votre configuration)
-$pdo = new PDO('mysql:host=localhost;dbname=nom_de_la_base', 'utilisateur', 'mot_de_passe');
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// ID de l'utilisateur à afficher (vous pouvez changer cet ID pour afficher un autre utilisateur)
+$user_id = 1;
 
-// Récupération des dernières annonces de l'utilisateur
-$stmt_annonces = $pdo->prepare('SELECT * FROM annonces WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 5');
-$stmt_annonces->execute(['user_id' => $_SESSION['user']['id']]);
-$annonces = $stmt_annonces->fetchAll(PDO::FETCH_ASSOC);
+// Récupération des informations de l'utilisateur
+$sql_user = "SELECT * FROM utilisateurs WHERE id = ?";
+$stmt_user = $conn->prepare($sql_user);
+$stmt_user->bind_param("i", $user_id);
+$stmt_user->execute();
+$result_user = $stmt_user->get_result();
+$user = $result_user->fetch_assoc();
 
-// Récupération des derniers commentaires de l'utilisateur
-$stmt_commentaires = $pdo->prepare('SELECT * FROM commentaires WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 5');
-$stmt_commentaires->execute(['user_id' => $_SESSION['user']['id']]);
-$commentaires = $stmt_commentaires->fetchAll(PDO::FETCH_ASSOC);
+if (!$user) {
+    die("Utilisateur non trouvé");
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -33,24 +37,17 @@ $commentaires = $stmt_commentaires->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <h1>Profil de l'utilisateur</h1>
-    <p>Nom: <?php echo htmlspecialchars($_SESSION['user']['last_name']); ?></p>
-    <p>Prénom: <?php echo htmlspecialchars($_SESSION['user']['first_name']); ?></p>
-    <p>Email: <?php echo htmlspecialchars($_SESSION['user']['email']); ?></p>
-    <p>Adresse: <?php echo htmlspecialchars($_SESSION['user']['address']); ?></p>
-    <p>Téléphone: <?php echo htmlspecialchars($_SESSION['user']['phone']); ?></p>
-    
-    <h2>Dernières annonces</h2>
-    <ul>
-        <?php foreach ($annonces as $annonce): ?>
-            <li><?php echo htmlspecialchars($annonce['title']); ?> - <?php echo htmlspecialchars($annonce['created_at']); ?></li>
-        <?php endforeach; ?>
-    </ul>
-
-    <h2>Derniers commentaires</h2>
-    <ul>
-        <?php foreach ($commentaires as $commentaire): ?>
-            <li><?php echo htmlspecialchars($commentaire['content']); ?> - <?php echo htmlspecialchars($commentaire['created_at']); ?></li>
-        <?php endforeach; ?>
-    </ul>
+    <p>Nom: <?php echo htmlspecialchars($user['nom']); ?></p>
+    <p>Prénom: <?php echo htmlspecialchars($user['prenom']); ?></p>
+    <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+    <p>Mot de passe: <?php echo htmlspecialchars($user['mot_de_passe']); ?></p>
+    <p>Date d'inscription: <?php echo htmlspecialchars($user['date_inscription']); ?></p>
 </body>
 </html>
+
+<?php
+// Fermer les connexions et les statements
+$stmt_user->close();
+$conn->close();
+?>
+
