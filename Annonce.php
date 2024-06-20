@@ -1,4 +1,3 @@
-
 <?php
 // Démarrer la session au début du fichier
 session_start();
@@ -25,9 +24,8 @@ require_once(__DIR__ . '/header.php');
     <!-- Inclusion de Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-</head>
 <body>
-    <main>
+    <main class="container">
         <?php
         if (!$dbh) {
             die("Connexion échouée");
@@ -37,7 +35,7 @@ require_once(__DIR__ . '/header.php');
         $id_annonce = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         // Requête SQL pour récupérer les détails de l'annonce
-        $sql = "SELECT annonces.titre, annonces.description, annonces.prix, annonces.date_publication, utilisateurs.nom AS nom_utilisateur, utilisateurs.prenom AS prenom_utilisateur, categories.nom AS nom_categorie
+        $sql = "SELECT annonces.id_utilisateur, annonces.titre, annonces.description, annonces.prix, annonces.date_publication, utilisateurs.nom AS nom_utilisateur, utilisateurs.prenom AS prenom_utilisateur, categories.nom AS nom_categorie
                 FROM annonces
                 JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id
                 JOIN categories ON annonces.id_categorie = categories.id
@@ -60,10 +58,14 @@ require_once(__DIR__ . '/header.php');
             echo "<p>Date de publication: " . htmlspecialchars($annonce['date_publication']) . "</p>";
             echo "<p>Catégorie: " . htmlspecialchars($annonce['nom_categorie']) . "</p>";
             echo "<p>Publié par: " . htmlspecialchars($annonce['prenom_utilisateur']) . " " . htmlspecialchars($annonce['nom_utilisateur']) . "</p>";
+
+            // Vérifier si l'utilisateur connecté est le propriétaire de l'annonce
+            if ($annonce['id_utilisateur'] == $_SESSION['user_id']) {
+                echo '<button id="deleteButton" class="btn btn-danger">Supprimer l\'annonce</button>';
+            }
         } else {
             echo "<p>Aucune annonce trouvée.</p>";
         }
-        echo($_SESSION['user_id'])
         ?>
     </main>
 
@@ -72,5 +74,13 @@ require_once(__DIR__ . '/header.php');
         require_once(__DIR__ . '/footer.php');
         ?>
     </footer>
+
+    <script>
+        document.getElementById('deleteButton').addEventListener('click', function() {
+            if (confirm('Voulez-vous vraiment supprimer l\'annonce ?')) {
+                window.location.href = 'delete_annonce.php?id=' + <?php echo $id_annonce; ?>;
+            }
+        });
+    </script>
 </body>
 </html>
