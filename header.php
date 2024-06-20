@@ -28,7 +28,11 @@
                     <a class="nav-link" href="login.php">connexion</a>
                     
                 </li>
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> 86c6e707ef5eb92858ee470e37c8133bb74138c6
             </ul>
        
        
