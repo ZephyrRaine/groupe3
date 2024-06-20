@@ -14,7 +14,7 @@ require_once(__DIR__ . '/header.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Description de votre site ou page">
     <meta name="keywords" content="mots-clés, séparés, par, des, virgules">
-    <meta name="author" content="Votre Nom">
+    <meta name="author" content="Groupe TAPT">
     <title>Accueil</title>
 
     <!-- Inclusion de Bootstrap pour le style -->
@@ -27,7 +27,7 @@ require_once(__DIR__ . '/header.php');
 <body>
 
 <div class="container">
-    <h1 class="mt-4">Le Mauvais Coin</h1>
+    <h1 class="mt-4">LeMauvaisCoin</h1>
     
 </div>
 
