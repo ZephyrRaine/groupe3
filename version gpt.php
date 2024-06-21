@@ -16,7 +16,6 @@
 session_start();
 require_once('BDD.php');
 
-$_SESSION['user_id'] = 1;
 
 
 // Affichage du profil privé
@@ -179,9 +178,5 @@ if (!isset($_SESSION['user_id'])): ?>
     <?php } ?>
 
 <?php endif; ?>
-
- 
-
 </body>
-
 </html>
